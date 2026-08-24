@@ -353,12 +353,15 @@ func rewriteJSON(body []byte, profile Profile, kind string, options RequestOptio
 		if options.VideoAspectRatio != "" && options.VideoAspectRatio != "follow" {
 			payload["aspect_ratio"] = options.VideoAspectRatio
 		}
-		// “15 秒”代表跟随洛水；只有选择 30 秒时外置软件强制覆盖。
-		if options.VideoDuration == "30" {
+		if options.VideoDuration == "15" || options.VideoDuration == "30" {
 			if _, usesDuration := payload["duration"]; usesDuration {
-				payload["duration"] = 30
+				if options.VideoDuration == "30" {
+					payload["duration"] = 30
+				} else {
+					payload["duration"] = 15
+				}
 			} else {
-				payload["seconds"] = "30"
+				payload["seconds"] = options.VideoDuration
 			}
 		}
 	}

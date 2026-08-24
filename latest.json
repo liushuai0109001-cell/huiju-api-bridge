@@ -1,10 +1,10 @@
 {
-  "version": "1.0.14",
-  "download_url": "https://raw.githubusercontent.com/liushuai0109001-cell/huiju-api-bridge/main/downloads/huiju-api-bridge-v1.0.14-windows-amd64.zip",
+  "version": "1.0.15",
+  "download_url": "https://raw.githubusercontent.com/liushuai0109001-cell/huiju-api-bridge/main/downloads/huiju-api-bridge-v1.0.15-windows-amd64.zip",
   "download_urls": [
-    "https://raw.githubusercontent.com/liushuai0109001-cell/huiju-api-bridge/main/downloads/huiju-api-bridge-v1.0.14-windows-amd64.zip",
-    "https://cnb.cool/liushuai.uoj/huiju-api-bridge/-/raw/main/downloads/huiju-api-bridge-v1.0.14-windows-amd64.zip"
+    "https://raw.githubusercontent.com/liushuai0109001-cell/huiju-api-bridge/main/downloads/huiju-api-bridge-v1.0.15-windows-amd64.zip",
+    "https://cnb.cool/liushuai.uoj/huiju-api-bridge/-/raw/main/downloads/huiju-api-bridge-v1.0.15-windows-amd64.zip"
   ],
-  "sha256": "3967B4D3828992BCF0EE438582814613E41E35F901FC5140C00D54A1343BB839",
-  "notes": "启动时自动下载、校验、安装并重启客户端，支持 GitHub/CNB 多镜像。"
+  "sha256": "733D21FB31D3A93D0294FD58519AF4CA48FE45809DBCAE903B9D566FB8CE1B10",
+  "notes": "视频生成时长始终以外接软件 UI 中选择的 15 秒或 30 秒为准。"
 }

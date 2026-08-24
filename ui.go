@@ -62,8 +62,8 @@ type DesktopUI struct {
 
 var aspectLabels = []string{"跟随洛水", "1:1", "16:9", "9:16", "4:3", "3:4"}
 var aspectValues = []string{"follow", "1:1", "16:9", "9:16", "4:3", "3:4"}
-var durationLabels = []string{"15 秒（跟随洛水设置）", "30 秒（外置软件优先）"}
-var durationValues = []string{"follow", "30"}
+var durationLabels = []string{"15 秒（外接软件优先）", "30 秒（外接软件优先）"}
+var durationValues = []string{"15", "30"}
 
 func profilePage(title string, controls *ProfileControls, extra ...Widget) TabPage {
 	children := []Widget{
@@ -150,7 +150,7 @@ func (ui *DesktopUI) Run() error {
 					profilePage("视频模型", &ui.video,
 						Label{Text: "视频时长"},
 						ComboBox{AssignTo: &ui.options.Duration, Editable: false, Model: durationLabels},
-						Label{Text: "选择 30 秒时覆盖洛水时长；选择 15 秒时保留洛水请求值。"},
+						Label{Text: "最终请求始终使用这里选择的时长，并覆盖洛水中的时长。"},
 						Label{Text: "视频画面比例"},
 						ComboBox{AssignTo: &ui.options.VideoAspect, Editable: false, Model: aspectLabels},
 					),

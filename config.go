@@ -82,7 +82,7 @@ func defaultConfig() Config {
 			Video: profile("your-video-model"),
 		},
 		Upload:        UploadConfig{Enabled: true, URL: defaultUploadURL, APIKey: defaultUploadAPIKey},
-		Options:       RequestOptions{ImageAspectRatio: "follow", VideoAspectRatio: "follow", VideoDuration: "follow"},
+		Options:       RequestOptions{ImageAspectRatio: "follow", VideoAspectRatio: "follow", VideoDuration: "15"},
 		Compatibility: Compatibility{RewriteImagesPath: true, RequestTimeoutSecond: 600, StreamChatUpstream: true},
 		Luoshui:       LuoshuiIntegration{AutoConfigure: true},
 		Update:        UpdateConfig{Enabled: true, ManifestURL: defaultUpdateManifestURL, CheckOnStart: true},
@@ -147,8 +147,8 @@ func normalizeConfig(cfg *Config) {
 	if cfg.Options.VideoAspectRatio == "" {
 		cfg.Options.VideoAspectRatio = "follow"
 	}
-	if cfg.Options.VideoDuration == "" {
-		cfg.Options.VideoDuration = "follow"
+	if cfg.Options.VideoDuration == "" || cfg.Options.VideoDuration == "follow" {
+		cfg.Options.VideoDuration = "15"
 	}
 	if cfg.Update.ManifestURL == "" {
 		cfg.Update.ManifestURL = defaultUpdateManifestURL

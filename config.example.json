@@ -31,7 +31,7 @@
   "options": {
     "image_aspect_ratio": "follow",
     "video_aspect_ratio": "follow",
-    "video_duration": "follow"
+    "video_duration": "15"
   },
   "luoshui": {
     "auto_configure": true

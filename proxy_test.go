@@ -364,21 +364,26 @@ func TestChatImageWithoutReferencesUsesStringContent(t *testing.T) {
 }
 
 func TestVideoDurationSelectionPriority(t *testing.T) {
-	follow := rewriteJSON([]byte(`{"seconds":15}`), Profile{Model: "video"}, "video", RequestOptions{VideoDuration: "follow"})
+	forced15 := rewriteJSON([]byte(`{"seconds":30}`), Profile{Model: "video"}, "video", RequestOptions{VideoDuration: "15"})
 	forced := rewriteJSON([]byte(`{"seconds":15}`), Profile{Model: "video"}, "video", RequestOptions{VideoDuration: "30"})
 	forcedDuration := rewriteJSON([]byte(`{"duration":15}`), Profile{Model: "video"}, "video", RequestOptions{VideoDuration: "30"})
-	var followPayload, forcedPayload, durationPayload map[string]interface{}
-	_ = json.Unmarshal(follow, &followPayload)
+	missingDuration := rewriteJSON([]byte(`{"prompt":"test"}`), Profile{Model: "video"}, "video", RequestOptions{VideoDuration: "15"})
+	var forced15Payload, forcedPayload, durationPayload, missingPayload map[string]interface{}
+	_ = json.Unmarshal(forced15, &forced15Payload)
 	_ = json.Unmarshal(forced, &forcedPayload)
 	_ = json.Unmarshal(forcedDuration, &durationPayload)
-	if followPayload["seconds"] != "15" {
-		t.Fatalf("follow duration = %#v", followPayload["seconds"])
+	_ = json.Unmarshal(missingDuration, &missingPayload)
+	if forced15Payload["seconds"] != "15" {
+		t.Fatalf("forced 15 duration = %#v", forced15Payload["seconds"])
 	}
 	if forcedPayload["seconds"] != "30" {
 		t.Fatalf("forced duration = %#v", forcedPayload["seconds"])
 	}
 	if durationPayload["duration"] != float64(30) {
 		t.Fatalf("forced duration field = %#v", durationPayload["duration"])
+	}
+	if missingPayload["seconds"] != "15" {
+		t.Fatalf("missing duration was not supplied = %#v", missingPayload["seconds"])
 	}
 }
 

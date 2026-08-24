@@ -67,6 +67,14 @@ func TestDefaultUploadConfig(t *testing.T) {
 	}
 }
 
+func TestLegacyFollowVideoDurationMigratesToFixed15Seconds(t *testing.T) {
+	cfg := Config{Options: RequestOptions{VideoDuration: "follow"}}
+	normalizeConfig(&cfg)
+	if cfg.Options.VideoDuration != "15" {
+		t.Fatalf("video duration = %q", cfg.Options.VideoDuration)
+	}
+}
+
 func TestEnsureLuoshuiRuntimePatchPreservesExistingSitecustomize(t *testing.T) {
 	root := t.TempDir()
 	if err := os.WriteFile(filepath.Join(root, "run.py"), []byte("import os\n# 启动主程序\nimport main\n"), 0600); err != nil {
