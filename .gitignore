@@ -1,0 +1,12 @@
+config.json
+license.dat
+bridge.log
+*.bak
+*.before-*
+授权管理/license_private.key
+授权管理/已签发授权/
+release/
+*.exe
+*.zip
+测试输出/
+__pycache__/

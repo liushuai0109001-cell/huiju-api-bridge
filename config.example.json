@@ -1,0 +1,50 @@
+{
+  "listen": {
+    "host": "127.0.0.1",
+    "ports": [5400, 8000]
+  },
+  "profiles": {
+    "chat": {
+      "enabled": true,
+      "base_url": "https://your-newapi.example.com",
+      "api_key": "",
+      "model": "your-chat-model"
+    },
+    "image": {
+      "enabled": true,
+      "base_url": "https://your-newapi.example.com",
+      "api_key": "",
+      "model": "your-image-model"
+    },
+    "video": {
+      "enabled": true,
+      "base_url": "https://your-newapi.example.com",
+      "api_key": "",
+      "model": "your-video-model"
+    }
+  },
+  "upload": {
+    "enabled": true,
+    "url": "https://huiju.v888.art/upload",
+    "api_key": "huiju-upload-2026"
+  },
+  "options": {
+    "image_aspect_ratio": "follow",
+    "video_aspect_ratio": "follow",
+    "video_duration": "follow"
+  },
+  "luoshui": {
+    "auto_configure": true
+  },
+  "update": {
+    "enabled": true,
+    "manifest_url": "https://huiju.v888.art/huiju-api-bridge/latest.json",
+    "check_on_start": true
+  },
+  "compatibility": {
+    "rewrite_images_path": true,
+    "request_timeout_seconds": 600,
+    "log_request_body": false,
+    "stream_chat_upstream": true
+  }
+}

@@ -1,0 +1,15 @@
+main:
+  push:
+    - services:
+        - docker
+      stages:
+        - name: validate-source
+          image: golang:1.26
+          script:
+            - go test ./...
+            - go vet ./...
+        - name: publish-instructions
+          image: alpine:3.20
+          script:
+            - test -f latest.json.example
+            - echo "Source validation passed. Windows release packages are published as release assets."
