@@ -235,7 +235,11 @@ func (ui *DesktopUI) checkUpdateAsync(showResult bool) {
 		_ = ui.updateLabel.SetText("发现新版本 " + manifest.Version)
 		message := "发现新版本 " + manifest.Version + "。\r\n\r\n" + manifest.Notes + "\r\n\r\n是否打开下载地址？"
 		if walk.MsgBox(ui.window, "发现更新", message, walk.MsgBoxIconInformation|walk.MsgBoxYesNo) == walk.DlgCmdYes {
-			if openErr := openUpdateURL(manifest.DownloadURL); openErr != nil {
+			selectedURL, selectErr := selectFastestDownloadURL(manifest, nil)
+			if selectErr != nil {
+				_, _ = ui.logBuffer.Write([]byte(time.Now().Format("2006/01/02 15:04:05") + " 更新镜像探测失败，回退主下载地址：" + selectErr.Error() + "\r\n"))
+			}
+			if openErr := openUpdateURL(selectedURL); openErr != nil {
 				walk.MsgBox(ui.window, "打开下载地址失败", openErr.Error(), walk.MsgBoxIconError)
 			}
 		}

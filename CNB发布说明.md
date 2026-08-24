@@ -42,3 +42,5 @@ Get-FileHash .\release\huiju-api-bridge-v1.0.11-windows-amd64.zip -Algorithm SHA
 ```
 
 也可以设置环境变量 `HUIJU_UPDATE_MANIFEST_URL`，它优先于配置文件，适合统一切换 GitHub、CNB 或自有 CDN。
+
+`latest.json` 支持 `download_urls` 镜像数组。客户端会并发探测地址并选择最快可用镜像；发布时应先用 HTTP HEAD/Range 验证每个镜像确实能下载完整发行包，再写入清单。

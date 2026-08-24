@@ -40,3 +40,24 @@ func TestCheckForUpdateDisabled(t *testing.T) {
 		t.Fatalf("manifest=%#v err=%v", manifest, err)
 	}
 }
+
+func TestDownloadCandidatesDeduplicateMirrors(t *testing.T) {
+	manifest := UpdateManifest{DownloadURL: "https://a.example/file.zip", DownloadURLs: []string{"https://a.example/file.zip", "https://b.example/file.zip"}}
+	candidates := manifest.downloadCandidates()
+	if len(candidates) != 2 || candidates[0] != "https://a.example/file.zip" || candidates[1] != "https://b.example/file.zip" {
+		t.Fatalf("candidates=%#v", candidates)
+	}
+}
+
+func TestSelectFastestDownloadURL(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("ok"))
+	}))
+	defer server.Close()
+	manifest := UpdateManifest{DownloadURL: "http://127.0.0.1:1/unavailable", DownloadURLs: []string{server.URL + "/file.zip"}}
+	selected, err := selectFastestDownloadURL(manifest, server.Client())
+	if err != nil || selected != server.URL+"/file.zip" {
+		t.Fatalf("selected=%q err=%v", selected, err)
+	}
+}
