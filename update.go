@@ -132,9 +132,14 @@ func selectFastestDownloadURL(manifest UpdateManifest, client *http.Client) (str
 				results <- result{err: err}
 				return
 			}
-			response.Body.Close()
+			defer response.Body.Close()
 			if response.StatusCode < 200 || response.StatusCode >= 400 {
 				results <- result{err: fmt.Errorf("HTTP %d", response.StatusCode)}
+				return
+			}
+			header := make([]byte, 4)
+			if _, err := io.ReadFull(response.Body, header); err != nil || string(header[:2]) != "PK" {
+				results <- result{err: fmt.Errorf("响应不是 ZIP 文件")}
 				return
 			}
 			results <- result{url: value}

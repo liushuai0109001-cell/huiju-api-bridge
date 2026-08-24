@@ -52,12 +52,25 @@ func TestDownloadCandidatesDeduplicateMirrors(t *testing.T) {
 func TestSelectFastestDownloadURL(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte("ok"))
+		_, _ = w.Write([]byte("PK\x03\x04test"))
 	}))
 	defer server.Close()
 	manifest := UpdateManifest{DownloadURL: "http://127.0.0.1:1/unavailable", DownloadURLs: []string{server.URL + "/file.zip"}}
 	selected, err := selectFastestDownloadURL(manifest, server.Client())
 	if err != nil || selected != server.URL+"/file.zip" {
+		t.Fatalf("selected=%q err=%v", selected, err)
+	}
+}
+
+func TestSelectFastestDownloadURLRejectsHTML200(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html")
+		_, _ = w.Write([]byte("<!DOCTYPE html>"))
+	}))
+	defer server.Close()
+	manifest := UpdateManifest{DownloadURL: server.URL}
+	selected, err := selectFastestDownloadURL(manifest, server.Client())
+	if err == nil || selected != server.URL {
 		t.Fatalf("selected=%q err=%v", selected, err)
 	}
 }
