@@ -1,11 +1,15 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -158,4 +162,84 @@ func openUpdateURL(value string) error {
 		return exec.Command("rundll32", "url.dll,FileProtocolHandler", value).Start()
 	}
 	return exec.Command("xdg-open", value).Start()
+}
+
+func downloadUpdate(manifest UpdateManifest, client *http.Client, destination string) error {
+	if client == nil {
+		client = &http.Client{Timeout: 30 * time.Minute}
+	}
+	url, err := selectFastestDownloadURL(manifest, &http.Client{Timeout: 10 * time.Second})
+	if err != nil && url == "" {
+		return err
+	}
+	response, err := client.Get(url)
+	if err != nil {
+		return fmt.Errorf("下载更新失败：%w", err)
+	}
+	defer response.Body.Close()
+	if response.StatusCode < 200 || response.StatusCode >= 300 {
+		return fmt.Errorf("下载更新返回 HTTP %d", response.StatusCode)
+	}
+	file, err := os.Create(destination)
+	if err != nil {
+		return err
+	}
+	_, copyErr := io.Copy(file, response.Body)
+	closeErr := file.Close()
+	if copyErr != nil {
+		return copyErr
+	}
+	if closeErr != nil {
+		return closeErr
+	}
+	if expected := strings.TrimSpace(strings.ToLower(manifest.SHA256)); expected != "" {
+		file, err := os.Open(destination)
+		if err != nil {
+			return err
+		}
+		hash := sha256.New()
+		_, copyErr = io.Copy(hash, file)
+		_ = file.Close()
+		if copyErr != nil {
+			return copyErr
+		}
+		if got := hex.EncodeToString(hash.Sum(nil)); got != expected {
+			return fmt.Errorf("更新包 SHA256 校验失败：got=%s expected=%s", got, expected)
+		}
+	}
+	return nil
+}
+
+func installUpdateAfterExit(archivePath, appDir, executable string, pid int) error {
+	scriptPath := filepath.Join(os.TempDir(), fmt.Sprintf("huiju-update-%d.ps1", pid))
+	staging := filepath.Join(os.TempDir(), fmt.Sprintf("huiju-update-stage-%d", pid))
+	script := fmt.Sprintf(`$ErrorActionPreference = "Stop"
+$archive = %q
+$target = %q
+$stage = %q
+$pid = %d
+try {
+  Wait-Process -Id $pid -Timeout 300 -ErrorAction SilentlyContinue
+  if (Test-Path $stage) { Remove-Item -LiteralPath $stage -Recurse -Force }
+  Expand-Archive -LiteralPath $archive -DestinationPath $stage -Force
+  $root = Get-ChildItem -LiteralPath $stage -Directory | Select-Object -First 1
+  if (-not $root) { $root = Get-Item -LiteralPath $stage }
+  Get-ChildItem -LiteralPath $root.FullName -Recurse -File | ForEach-Object {
+    $relative = $_.FullName.Substring($root.FullName.Length).TrimStart('\','/')
+    if ($relative -in @('config.json','license.dat','bridge.log')) { return }
+    $destination = Join-Path $target $relative
+    $parent = Split-Path -Parent $destination
+    if (-not (Test-Path $parent)) { New-Item -ItemType Directory -Path $parent -Force | Out-Null }
+    Copy-Item -LiteralPath $_.FullName -Destination $destination -Force
+  }
+  Start-Process -FilePath (Join-Path $target %q)
+} finally {
+  Remove-Item -LiteralPath $archive -Force -ErrorAction SilentlyContinue
+  Remove-Item -LiteralPath $stage -Recurse -Force -ErrorAction SilentlyContinue
+  Remove-Item -LiteralPath $MyInvocation.MyCommand.Path -Force -ErrorAction SilentlyContinue
+}`, archivePath, appDir, staging, pid, executable)
+	if err := os.WriteFile(scriptPath, []byte(script), 0600); err != nil {
+		return err
+	}
+	return exec.Command("powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-WindowStyle", "Hidden", "-File", scriptPath).Start()
 }

@@ -231,18 +231,31 @@ func (ui *DesktopUI) checkUpdateAsync(showResult bool) {
 		})
 		return
 	}
+	ui.window.Synchronize(func() { _ = ui.updateLabel.SetText("正在自动下载更新 " + manifest.Version) })
+	_, _ = ui.logBuffer.Write([]byte(time.Now().Format("2006/01/02 15:04:05") + " 发现新版本 " + manifest.Version + "，开始自动下载并安装\r\n"))
+	archivePath := filepath.Join(os.TempDir(), "huiju-api-bridge-update-"+strings.TrimPrefix(manifest.Version, "v")+".zip")
+	if err := downloadUpdate(manifest, nil, archivePath); err != nil {
+		ui.window.Synchronize(func() {
+			_ = ui.updateLabel.SetText("自动更新失败")
+			_, _ = ui.logBuffer.Write([]byte(time.Now().Format("2006/01/02 15:04:05") + " 自动更新失败：" + err.Error() + "\r\n"))
+			if showResult {
+				walk.MsgBox(ui.window, "自动更新失败", err.Error(), walk.MsgBoxIconWarning)
+			}
+		})
+		return
+	}
+	executable, err := os.Executable()
+	if err != nil {
+		return
+	}
+	if err := installUpdateAfterExit(archivePath, ui.appDir, filepath.Base(executable), os.Getpid()); err != nil {
+		ui.window.Synchronize(func() { walk.MsgBox(ui.window, "启动更新程序失败", err.Error(), walk.MsgBoxIconError) })
+		return
+	}
 	ui.window.Synchronize(func() {
-		_ = ui.updateLabel.SetText("发现新版本 " + manifest.Version)
-		message := "发现新版本 " + manifest.Version + "。\r\n\r\n" + manifest.Notes + "\r\n\r\n是否打开下载地址？"
-		if walk.MsgBox(ui.window, "发现更新", message, walk.MsgBoxIconInformation|walk.MsgBoxYesNo) == walk.DlgCmdYes {
-			selectedURL, selectErr := selectFastestDownloadURL(manifest, nil)
-			if selectErr != nil {
-				_, _ = ui.logBuffer.Write([]byte(time.Now().Format("2006/01/02 15:04:05") + " 更新镜像探测失败，回退主下载地址：" + selectErr.Error() + "\r\n"))
-			}
-			if openErr := openUpdateURL(selectedURL); openErr != nil {
-				walk.MsgBox(ui.window, "打开下载地址失败", openErr.Error(), walk.MsgBoxIconError)
-			}
-		}
+		_ = ui.updateLabel.SetText("更新已下载，正在重启安装")
+		_, _ = ui.logBuffer.Write([]byte(time.Now().Format("2006/01/02 15:04:05") + " 更新包校验成功，程序即将退出并自动安装\r\n"))
+		ui.window.Close()
 	})
 }
 

@@ -1,10 +1,10 @@
 {
-  "version": "1.0.13",
-  "download_url": "https://raw.githubusercontent.com/liushuai0109001-cell/huiju-api-bridge/main/downloads/huiju-api-bridge-v1.0.13-windows-amd64.zip",
+  "version": "1.0.14",
+  "download_url": "https://raw.githubusercontent.com/liushuai0109001-cell/huiju-api-bridge/main/downloads/huiju-api-bridge-v1.0.14-windows-amd64.zip",
   "download_urls": [
-    "https://raw.githubusercontent.com/liushuai0109001-cell/huiju-api-bridge/main/downloads/huiju-api-bridge-v1.0.13-windows-amd64.zip",
-    "https://cnb.cool/liushuai.uoj/huiju-api-bridge/-/raw/main/downloads/huiju-api-bridge-v1.0.13-windows-amd64.zip"
+    "https://raw.githubusercontent.com/liushuai0109001-cell/huiju-api-bridge/main/downloads/huiju-api-bridge-v1.0.14-windows-amd64.zip",
+    "https://cnb.cool/liushuai.uoj/huiju-api-bridge/-/raw/main/downloads/huiju-api-bridge-v1.0.14-windows-amd64.zip"
   ],
-  "sha256": "31148124BCFF3237936DB35F8DA5AC300AACC07262D4605D0EECA09D6CE434EC",
-  "notes": "增加 GitHub/CNB 多镜像竞速下载，改善外网较慢时的更新速度。"
+  "sha256": "3967B4D3828992BCF0EE438582814613E41E35F901FC5140C00D54A1343BB839",
+  "notes": "启动时自动下载、校验、安装并重启客户端，支持 GitHub/CNB 多镜像。"
 }
