@@ -1,6 +1,8 @@
 config.json
 license.dat
 bridge.log
+*.log
+*.active
 *.bak
 *.before-*
 授权管理/license_private.key
