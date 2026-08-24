@@ -1,0 +1,6 @@
+{
+  "version": "1.0.12",
+  "download_url": "https://raw.githubusercontent.com/liushuai0109001-cell/huiju-api-bridge/main/downloads/huiju-api-bridge-v1.0.12-windows-amd64.zip",
+  "sha256": "276E474E240AD28D261E57B4B90255BF24EBE6F6C2EEF4256CA242DAC643FEC9",
+  "notes": "增加视频任务状态明细日志，并启用 GitHub 自动更新检查。"
+}

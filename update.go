@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-const defaultUpdateManifestURL = "https://huiju.v888.art/huiju-api-bridge/latest.json"
+const defaultUpdateManifestURL = "https://raw.githubusercontent.com/liushuai0109001-cell/huiju-api-bridge/main/latest.json"
 
 type UpdateConfig struct {
 	Enabled      bool   `json:"enabled"`

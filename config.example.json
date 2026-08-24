@@ -38,7 +38,7 @@
   },
   "update": {
     "enabled": true,
-    "manifest_url": "https://huiju.v888.art/huiju-api-bridge/latest.json",
+    "manifest_url": "https://raw.githubusercontent.com/liushuai0109001-cell/huiju-api-bridge/main/latest.json",
     "check_on_start": true
   },
   "compatibility": {

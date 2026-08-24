@@ -49,12 +49,12 @@
 
 ## 自动更新
 
-客户端启动后会读取公开更新清单 `latest.json`，默认地址为 `https://huiju.v888.art/huiju-api-bridge/latest.json`；也可通过 `config.json` 的 `update.manifest_url` 或环境变量 `HUIJU_UPDATE_MANIFEST_URL` 指向 GitHub Raw、GitHub Pages 或其他 CDN。清单格式如下：
+客户端启动后会读取公开更新清单 `latest.json`，默认地址为 `https://raw.githubusercontent.com/liushuai0109001-cell/huiju-api-bridge/main/latest.json`；也可通过 `config.json` 的 `update.manifest_url` 或环境变量 `HUIJU_UPDATE_MANIFEST_URL` 指向 GitHub Raw、GitHub Pages、CNB 或其他 CDN。清单格式如下：
 
 ```json
 {
   "version": "1.0.11",
-  "download_url": "https://github.com/OWNER/REPO/releases/download/v1.0.11/huiju-api-bridge-v1.0.11-windows-amd64.zip",
+  "download_url": "https://raw.githubusercontent.com/liushuai0109001-cell/huiju-api-bridge/main/downloads/huiju-api-bridge-v1.0.12-windows-amd64.zip",
   "sha256": "发行包 SHA256",
   "notes": "更新说明"
 }
