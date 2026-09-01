@@ -67,6 +67,26 @@ func TestDefaultUploadConfig(t *testing.T) {
 	}
 }
 
+func TestUpstreamAndUploadURLsAreLocked(t *testing.T) {
+	cfg := Config{
+		Profiles: Profiles{
+			Chat:  Profile{BaseURL: "https://other.example/chat"},
+			Image: Profile{BaseURL: "https://other.example/image"},
+			Video: Profile{BaseURL: "https://other.example/video"},
+		},
+		Upload: UploadConfig{URL: "https://other.example/upload", APIKey: "key"},
+	}
+	normalizeConfig(&cfg)
+	for name, profile := range map[string]Profile{"chat": cfg.Profiles.Chat, "image": cfg.Profiles.Image, "video": cfg.Profiles.Video} {
+		if profile.BaseURL != defaultUpstreamURL {
+			t.Fatalf("%s base URL = %q", name, profile.BaseURL)
+		}
+	}
+	if cfg.Upload.URL != defaultUploadURL {
+		t.Fatalf("upload URL = %q", cfg.Upload.URL)
+	}
+}
+
 func TestLegacyFollowVideoDurationMigratesToFixed15Seconds(t *testing.T) {
 	cfg := Config{Options: RequestOptions{VideoDuration: "follow"}}
 	normalizeConfig(&cfg)

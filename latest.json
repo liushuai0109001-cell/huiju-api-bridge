@@ -1,10 +1,10 @@
 {
-  "version": "1.0.16",
-  "download_url": "https://cdn.jsdelivr.net/gh/liushuai0109001-cell/huiju-api-bridge@main/downloads/huiju-api-bridge-v1.0.16-windows-amd64.zip",
+  "version": "1.0.17",
+  "download_url": "https://cdn.jsdelivr.net/gh/liushuai0109001-cell/huiju-api-bridge@main/downloads/huiju-api-bridge-v1.0.17-windows-amd64.zip",
   "download_urls": [
-    "https://cdn.jsdelivr.net/gh/liushuai0109001-cell/huiju-api-bridge@main/downloads/huiju-api-bridge-v1.0.16-windows-amd64.zip",
-    "https://raw.githubusercontent.com/liushuai0109001-cell/huiju-api-bridge/main/downloads/huiju-api-bridge-v1.0.16-windows-amd64.zip"
+    "https://cdn.jsdelivr.net/gh/liushuai0109001-cell/huiju-api-bridge@main/downloads/huiju-api-bridge-v1.0.17-windows-amd64.zip",
+    "https://raw.githubusercontent.com/liushuai0109001-cell/huiju-api-bridge/main/downloads/huiju-api-bridge-v1.0.17-windows-amd64.zip"
   ],
-  "sha256": "F2E67DCBF211E347ED5E7E11950EF0AF0B861CF0033256D085A9B6E6DB5BEDEA",
-  "notes": "视频时长以外接软件为准；更新使用 jsDelivr/GitHub 双源并验证 ZIP 文件头。"
+  "sha256": "BAF19E21A0576E93CAE62FF64CEF93CCCDEAC14B66B9DA55BC4F5C5C206431A1",
+  "notes": "语言、图片、视频接口和图床 URL 已固定为荟聚网址，用户不能修改。"
 }

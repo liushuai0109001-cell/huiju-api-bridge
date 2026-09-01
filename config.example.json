@@ -6,19 +6,19 @@
   "profiles": {
     "chat": {
       "enabled": true,
-      "base_url": "https://your-newapi.example.com",
+      "base_url": "https://huiju.v888.art",
       "api_key": "",
       "model": "your-chat-model"
     },
     "image": {
       "enabled": true,
-      "base_url": "https://your-newapi.example.com",
+      "base_url": "https://huiju.v888.art",
       "api_key": "",
       "model": "your-image-model"
     },
     "video": {
       "enabled": true,
-      "base_url": "https://your-newapi.example.com",
+      "base_url": "https://huiju.v888.art",
       "api_key": "",
       "model": "your-video-model"
     }

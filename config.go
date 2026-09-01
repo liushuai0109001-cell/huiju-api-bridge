@@ -9,9 +9,12 @@ import (
 )
 
 const (
+	defaultUpstreamURL  = "https://huiju.v888.art"
 	defaultUploadURL    = "https://huiju.v888.art/upload"
 	defaultUploadAPIKey = "huiju-upload-2026"
 )
+
+var allowCustomURLsForTests bool
 
 type ListenConfig struct {
 	Host  string `json:"host"`
@@ -72,7 +75,7 @@ type ConfigStore struct {
 
 func defaultConfig() Config {
 	profile := func(model string) Profile {
-		return Profile{Enabled: true, Model: model}
+		return Profile{Enabled: true, BaseURL: defaultUpstreamURL, Model: model}
 	}
 	return Config{
 		Listen: ListenConfig{Host: "127.0.0.1", Ports: []int{5400, 8000}},
@@ -132,6 +135,12 @@ func (s *ConfigStore) Load() error {
 }
 
 func normalizeConfig(cfg *Config) {
+	if !allowCustomURLsForTests {
+		cfg.Profiles.Chat.BaseURL = defaultUpstreamURL
+		cfg.Profiles.Image.BaseURL = defaultUpstreamURL
+		cfg.Profiles.Video.BaseURL = defaultUpstreamURL
+		cfg.Upload.URL = defaultUploadURL
+	}
 	if cfg.Listen.Host == "" {
 		cfg.Listen.Host = "127.0.0.1"
 	}
@@ -153,10 +162,7 @@ func normalizeConfig(cfg *Config) {
 	if cfg.Update.ManifestURL == "" {
 		cfg.Update.ManifestURL = defaultUpdateManifestURL
 	}
-	missingUploadConfig := cfg.Upload.URL == "" || cfg.Upload.APIKey == ""
-	if cfg.Upload.URL == "" {
-		cfg.Upload.URL = defaultUploadURL
-	}
+	missingUploadConfig := cfg.Upload.APIKey == ""
 	if cfg.Upload.APIKey == "" {
 		cfg.Upload.APIKey = defaultUploadAPIKey
 	}

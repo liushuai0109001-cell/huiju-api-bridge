@@ -17,6 +17,8 @@ import (
 
 func newTestBridge(t *testing.T, upstream *httptest.Server) *Bridge {
 	t.Helper()
+	allowCustomURLsForTests = true
+	t.Cleanup(func() { allowCustomURLsForTests = false })
 	path := filepath.Join(t.TempDir(), "config.json")
 	store, err := NewConfigStore(path)
 	if err != nil {

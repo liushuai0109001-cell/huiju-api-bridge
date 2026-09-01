@@ -68,8 +68,8 @@ var durationValues = []string{"15", "30"}
 func profilePage(title string, controls *ProfileControls, extra ...Widget) TabPage {
 	children := []Widget{
 		CheckBox{AssignTo: &controls.Enabled, Text: "接管此类请求"},
-		Label{Text: "上游 Base URL"},
-		LineEdit{AssignTo: &controls.BaseURL, ToolTipText: "例如 https://api.example.com 或 https://api.example.com/v1"},
+		Label{Text: "上游 Base URL（已固定）"},
+		LineEdit{AssignTo: &controls.BaseURL, ReadOnly: true, ToolTipText: "接口地址由软件固定，用户不可修改"},
 		Label{Text: "API Key"},
 		LineEdit{AssignTo: &controls.APIKey, PasswordMode: true},
 		Label{Text: "目标模型（点击底部“获取模型”刷新选项）"},
@@ -89,8 +89,8 @@ func uploadPage(controls *UploadControls) TabPage {
 		Layout: VBox{Margins: Margins{Left: 12, Top: 12, Right: 12, Bottom: 12}, Spacing: 6},
 		Children: []Widget{
 			CheckBox{AssignTo: &controls.Enabled, Text: "接管洛水参考图上传"},
-			Label{Text: "图床上传 URL"},
-			LineEdit{AssignTo: &controls.URL, ToolTipText: "例如 https://api.example.com/upload"},
+			Label{Text: "图床上传 URL（已固定）"},
+			LineEdit{AssignTo: &controls.URL, ReadOnly: true, ToolTipText: "图床地址由软件固定，用户不可修改"},
 			Label{Text: "图床 API Key"},
 			LineEdit{AssignTo: &controls.APIKey, PasswordMode: true},
 			Label{Text: "洛水将上传到本机 /upload；真实 URL 和 Key 仅由外接软件使用。"},
@@ -394,14 +394,8 @@ func (ui *DesktopUI) activateLicense() {
 }
 
 func profileFromControls(controls ProfileControls) (Profile, error) {
-	baseURL := strings.TrimSpace(controls.BaseURL.Text())
-	if baseURL != "" {
-		if err := validateBaseURL(baseURL); err != nil {
-			return Profile{}, err
-		}
-	}
 	return Profile{
-		Enabled: controls.Enabled.Checked(), BaseURL: baseURL,
+		Enabled: controls.Enabled.Checked(), BaseURL: defaultUpstreamURL,
 		APIKey: strings.TrimSpace(controls.APIKey.Text()), Model: strings.TrimSpace(controls.Model.Text()),
 	}, nil
 }
@@ -423,15 +417,9 @@ func (ui *DesktopUI) configFromForm() (Config, error) {
 		VideoAspectRatio: optionValue(ui.options.VideoAspect, aspectValues),
 		VideoDuration:    optionValue(ui.options.Duration, durationValues),
 	}
-	uploadURL := strings.TrimSpace(ui.upload.URL.Text())
-	if uploadURL != "" {
-		if err := validateBaseURL(uploadURL); err != nil {
-			return Config{}, fmt.Errorf("图床上传: %w", err)
-		}
-	}
 	cfg.Upload = UploadConfig{
 		Enabled: ui.upload.Enabled.Checked(),
-		URL:     uploadURL,
+		URL:     defaultUploadURL,
 		APIKey:  strings.TrimSpace(ui.upload.APIKey.Text()),
 	}
 	cfg.Luoshui.AutoConfigure = ui.autoConfig.Checked()
